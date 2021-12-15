@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>397</width>
-    <height>408</height>
+    <width>303</width>
+    <height>327</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>TSPwithACO</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -194,11 +194,18 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
+         <widget class="QLabel" name="timeLabel">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QLabel" name="outputLabel">
           <property name="minimumSize">
            <size>
             <width>0</width>
-            <height>99</height>
+            <height>44</height>
            </size>
           </property>
           <property name="text">
@@ -227,6 +234,13 @@
       </item>
      </layout>
     </item>
+    <item>
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>1906100112 2021/12/15</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -234,8 +248,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>397</width>
-     <height>25</height>
+     <width>303</width>
+     <height>20</height>
     </rect>
    </property>
   </widget>

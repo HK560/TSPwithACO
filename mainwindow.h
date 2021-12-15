@@ -9,6 +9,7 @@
 #include"acothread.h"
 #include<QProgressDialog>
 #include <QMetaType>
+#include<QTime>
 QT_CHARTS_USE_NAMESPACE
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -34,5 +35,6 @@ private:
     Ui::MainWindow *ui;
     AcoThread* acoThread;
     QProgressDialog* progressBar;
+    QTime qtime;
 };
 #endif // MAINWINDOW_H

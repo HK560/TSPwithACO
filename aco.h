@@ -47,7 +47,7 @@ private:
     QVector<QVector<int>>antPath;
     QLineSeries* series=nullptr;
     void debugPheromone();
-    double globalMinPathLength=__DBL_MAX__;
+    double globalMinPathLength=DBL_MAX;
     QVector<int> globalMinPath;
 signals:
     void sendPrograssValue(int value);

@@ -31,7 +31,7 @@ void ACO::start()
         int nnn=nowTime;
         emit sendPrograssValue(nnn);
         qDebug()<<"!!!time:"<<time<<"!!!";
-        double minPathLength=__DBL_MAX__;
+        double minPathLength=DBL_MAX;
         QVector<int> minPath;
         QVector<QVector<double>>newPheromone;//新信息素
         newPheromone.fill(QVector<double>(30,0),30);
