@@ -26,11 +26,15 @@ public:
     ACO(int antSize,int cycletime,int PheromoneImportantValue,int HeFuntionImportValue,double PheromoneVolatilization);
     void start();
     QLineSeries* getSeries();
-private:
+    double getGlobalMinPathLength();
+    QVector<int> getGlobalMinPath();
     QVector<CityMap> loc;
+    double getPathLength(QVector<int>path);
+private:
+
     void init();
     int locationNum;
-    double getPathLength(QVector<int>path);
+
     int antSize;
     int cycletime;
     int PheromoneImportantValue;
@@ -41,8 +45,12 @@ private:
     QVector<QVector<double>>Pheromone;//信息素
     void refreshPheromone(QVector<QVector<double>>newPheromone);
     QVector<QVector<int>>antPath;
-    QLineSeries* series;
+    QLineSeries* series=nullptr;
     void debugPheromone();
+    double globalMinPathLength=__DBL_MAX__;
+    QVector<int> globalMinPath;
+signals:
+    void sendPrograssValue(int value);
 };
 
 #endif // ACO_H

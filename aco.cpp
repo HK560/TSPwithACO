@@ -26,9 +26,10 @@ void ACO::start()
 
 
     int time=this->cycletime;
-    double globalMinPathLength=__DBL_MAX__;
-    QVector<int> globalMinPath;
+
     for(int nowTime=0;nowTime<time;nowTime++){
+        int nnn=nowTime;
+        emit sendPrograssValue(nnn);
         qDebug()<<"!!!time:"<<time<<"!!!";
         double minPathLength=__DBL_MAX__;
         QVector<int> minPath;
@@ -131,7 +132,6 @@ void ACO::start()
 
 
 
-
 }
 
 void ACO::init()
@@ -175,6 +175,7 @@ double ACO::getPathLength(QVector<int> path)
     Q_ASSERT(this->locationNum==path.size());
     double pathLength=0;
     for(int k=0;k<path.size()-1;k++){
+        Q_ASSERT(k+1<path.size());
         pathLength+=sqrt(pow(qAbs((this->loc[path[k]].getX())-(this->loc[path[k+1]].getX())),2)+pow(qAbs((this->loc[path[k]].getY())-(this->loc[path[k+1]].getY())),2));
 //        pathLength+=qAbs((this->loc[path[k]].getX())-(this->loc[path[k+1]].getX()))+qAbs((this->loc[path[k]].getY())-(this->loc[path[k+1]].getY()));
     }
@@ -217,6 +218,16 @@ void ACO::debugPheromone()
     for(auto i=Pheromone.begin();i!=Pheromone.end();i++){
             qDebug()<<*i;
     }
+}
+
+double ACO::getGlobalMinPathLength()
+{
+    return this->globalMinPathLength;
+}
+
+QVector<int> ACO::getGlobalMinPath()
+{
+    return this->globalMinPath;
 }
 
 QLineSeries *ACO::getSeries()

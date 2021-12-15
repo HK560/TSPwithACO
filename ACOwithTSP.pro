@@ -10,12 +10,14 @@ QT  += charts
 
 SOURCES += \
     aco.cpp \
+    acothread.cpp \
     citymap.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     aco.h \
+    acothread.h \
     citymap.h \
     mainwindow.h
 
