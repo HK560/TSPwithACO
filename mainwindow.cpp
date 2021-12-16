@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->PheromoneImportantValueEdit->setText("1");
     ui->PheromoneVolatilizationEdit->setText("0.2");
     ui->cycleTimeEdit->setText("100");
-    ui->antSizeEdit->setText("20");
+    ui->antSizeEdit->setText("5");
     acoThread=new AcoThread(this);
     connect(acoThread,SIGNAL(sendSeries(QLineSeries*)),this,SLOT(showResult(QLineSeries*)));
     connect(acoThread,SIGNAL(minPath(QVector<int>)),this,SLOT(recvMinPath(QVector<int>)));
@@ -68,10 +68,10 @@ void MainWindow::on_ResultBtn_clicked()
     connect(acoThread,SIGNAL(progressValue(int)),this->progressBar,SLOT(setValue(int)));
     progressBar->setMinimum(0);
     progressBar->setMaximum(100);
-    progressBar->setLabelText("计算中");
+    progressBar->setLabelText("计算中...");
     progressBar->setCancelButton(nullptr);
     progressBar->setFixedSize(200,50);
-    progressBar->setWindowFlag(Qt::SubWindow);
+    progressBar->setWindowFlag(Qt::ToolTip);
     progressBar->show();
     acoThread->getParameter(ui->antSizeEdit->text().toInt(),
                             ui->cycleTimeEdit->text().toInt(),

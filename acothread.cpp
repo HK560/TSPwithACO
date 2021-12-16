@@ -18,6 +18,7 @@ void AcoThread::run()
     double pathLengthTmp=aco->getGlobalMinPathLength();
     emit minPath(pathTmp);
     emit minPathLength(pathLengthTmp);
+    delete aco;
 }
 
 void AcoThread::getProgressValue(int value)

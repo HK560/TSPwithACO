@@ -9,7 +9,10 @@ ACO::ACO()
 ACO::ACO(int antSize, int cycletime, int PheromoneImportantValue, int HeFuntionImportValue, double PheromoneVolatilization)
 {
 
-    //    Q_ASSERT(HeFuntionImportValue&&antSize&&cycletime&&PheromoneImportantValue&&PheromoneVolatilization);
+    Q_ASSERT(HeFuntionImportValue&&antSize>0);
+    Q_ASSERT(cycletime>0);
+    Q_ASSERT(PheromoneImportantValue>0);
+    Q_ASSERT(PheromoneVolatilization>0&&PheromoneVolatilization<1);
     init();
     this->locationNum=30;
     this->cycletime=cycletime;
@@ -21,7 +24,7 @@ ACO::ACO(int antSize, int cycletime, int PheromoneImportantValue, int HeFuntionI
 
 void ACO::start()
 {
-//    QMessageBox::information(nullptr,"info","start");
+    //    QMessageBox::information(nullptr,"info","start");
     series = new QLineSeries();
 
 
@@ -31,12 +34,12 @@ void ACO::start()
         int nnn=nowTime;
         emit sendPrograssValue(nnn);
         qDebug()<<"!!!time:"<<time<<"!!!";
-        double minPathLength=DBL_MAX;
+        double minPathLength=99999;//DBL_MAX;
         QVector<int> minPath;
         QVector<QVector<double>>newPheromone;//新信息素
         newPheromone.fill(QVector<double>(30,0),30);
 
-        debugPheromone();
+        //        debugPheromone();
         for(int i=0;i<antSize;i++){//第i个蚂蚁
             qDebug()<<"-------the"<<i<<"s ant------";
             QVector<int>tmpAntPath;//存储该蚂蚁的路径
@@ -53,58 +56,58 @@ void ACO::start()
             //对下一个城市的概率进行计算
             int nowCity=randomCityCode;
             for(int k=1;k<locationNum;k++){//第k个城市
-                qDebug()<<"+++++going to find next the"<<k<<"city+++++";
+                //                qDebug()<<"+++++going to find next the"<<k<<"city+++++";
                 double sumProbability=0;//总概率
                 QVector<double>nextCityProbabilityVector;//记录可以走的城市的概率
                 QVector<bool>whetherFind(locationNum,false);//标记城市是否已经计算过概率
                 QMap<double,int>probabilityToCityCodeMap;//记录概率对应的城市
                 for(int cityCode=0;cityCode<locationNum;cityCode++){//计算能走的城市的概率
                     if(whetherExist[cityCode]==false&&whetherFind[cityCode]==false){//确保不是已经经过的城市也不是已经计算过的城市
-//                        QDebug outputInfo=qDebug();
+                        //                        QDebug outputInfo=qDebug();
 
                         whetherFind[cityCode]=true;//标记已经访问
                         double nextCityProbability=getProbability(nowCity,cityCode);//计算概率
                         nextCityProbabilityVector.append(nextCityProbability);//将概率添加到城市概率vector中
                         probabilityToCityCodeMap.insert(nextCityProbability,cityCode);//map里记录一下概率对应城市
                         sumProbability+=nextCityProbability;//总概率加上
-//                        qDebug()<<"find"<<cityCode<<"city!"<<"Probability:"<<nextCityProbability<<"Now sumProbability:"<<sumProbability;
+                        //                        qDebug()<<"find"<<cityCode<<"city!"<<"Probability:"<<nextCityProbability<<"Now sumProbability:"<<sumProbability;
                     }
                 }
                 qSort(nextCityProbabilityVector.begin(),nextCityProbabilityVector.end());//概率从小到大排序
-                qDebug()<<"sort!:"<<nextCityProbabilityVector;
+                //                qDebug()<<"sort!:"<<nextCityProbabilityVector;
                 double eachProbaility=0;
                 QMap<double,int>formatProbabilityToCityCodeMap;//记录归一化后的概率对应的城市
                 for(auto i=nextCityProbabilityVector.begin();i!=nextCityProbabilityVector.end();i++){//对每个城市的概率
-//                    QDebug outputInfo=qDebug();
+                    //                    QDebug outputInfo=qDebug();
                     double probaility=*i;//取出概率
                     int cityCode=probabilityToCityCodeMap.value(probaility);//找到概率对应的城市
                     eachProbaility+=probaility/sumProbability;//概率归一化
                     formatProbabilityToCityCodeMap.insert(eachProbaility,cityCode);//记录归一化后概率对应城市
                     *i=eachProbaility;//重新给概率赋值
-//                    outputInfo<<"the probability:"<<probaility<<"toCity:"<<cityCode<<"newProbability:"<<eachProbaility;
+                    //                    outputInfo<<"the probability:"<<probaility<<"toCity:"<<cityCode<<"newProbability:"<<eachProbaility;
                 }
-//                QDebug outputInfo=qDebug();
+                //                QDebug outputInfo=qDebug();
                 double randProbability=QRandomGenerator::system()->bounded(1.0);//生成个随机数0到1.0
                 auto i=nextCityProbabilityVector.begin();
                 for(;i!=nextCityProbabilityVector.end();i++){//从小到大找,若这个概率比随机的值大即返回,该概率对应的城市就是要去的下一个城市
-//                    qDebug()<<"randProbability："<<randProbability<<"campareWith"<<*i;
+                    //                    qDebug()<<"randProbability："<<randProbability<<"campareWith"<<*i;
                     if(randProbability<double(*i)){
                         break;
                     }
 
                 }
 
-//                int lastCity=nowCity;
+                //                int lastCity=nowCity;
                 nowCity=formatProbabilityToCityCodeMap.value(*i);//取出城市
-//                newPheromone[lastCity][nowCity]+=1;
+                //                newPheromone[lastCity][nowCity]+=1;
                 tmpAntPath.append(nowCity);//加到路径里
                 whetherExist[nowCity]=true;//标记已经过
-                qDebug()<<"+++++so next city is"<<nowCity<<"+++++";
+                //                qDebug()<<"+++++so next city is"<<nowCity<<"+++++";
                 //信息署素挥发
 
 
             }
-            qDebug()<<"path:"<<tmpAntPath;
+            //            qDebug()<<"path:"<<tmpAntPath;
             //计算路径长度
             double pathLength=getPathLength(tmpAntPath);
             double addPheromone=Q/pathLength;
@@ -115,12 +118,12 @@ void ACO::start()
                 minPathLength=pathLength;
                 minPath=tmpAntPath;
             }
-            qDebug()<<"------END------";
+            //            qDebug()<<"------END------";
         }
         refreshPheromone(newPheromone);
         //输出本次迭代最小路径长度
-        qDebug()<<"minlength:"<<minPathLength<<minPath;
-        qDebug()<<"!!!END!!!";
+        //        qDebug()<<"minlength:"<<minPathLength<<minPath;
+        //        qDebug()<<"!!!END!!!";
         if(minPathLength<globalMinPathLength){
             globalMinPathLength=minPathLength;
             globalMinPath=minPath;
@@ -171,16 +174,16 @@ void ACO::init()
 
 double ACO::getPathLength(QVector<int> path)
 {
-//    qDebug()<<"getpathlength";
+    //    qDebug()<<"getpathlength";
     Q_ASSERT(this->locationNum==path.size());
     double pathLength=0;
     for(int k=0;k<path.size()-1;k++){
         Q_ASSERT(k+1<path.size());
         pathLength+=sqrt(pow(qAbs((this->loc[path[k]].getX())-(this->loc[path[k+1]].getX())),2)+pow(qAbs((this->loc[path[k]].getY())-(this->loc[path[k+1]].getY())),2));
-//        pathLength+=qAbs((this->loc[path[k]].getX())-(this->loc[path[k+1]].getX()))+qAbs((this->loc[path[k]].getY())-(this->loc[path[k+1]].getY()));
+        //        pathLength+=qAbs((this->loc[path[k]].getX())-(this->loc[path[k+1]].getX()))+qAbs((this->loc[path[k]].getY())-(this->loc[path[k+1]].getY()));
     }
-//    int end=path.last()
-//    pathLength+=qAbs((this->loc[path.last()].getX())-(this->loc[path.first()].getX()))+qAbs((this->loc[path.last()].getY())-(this->loc[path.first()].getY()));
+    //    int end=path.last()
+    //    pathLength+=qAbs((this->loc[path.last()].getX())-(this->loc[path.first()].getX()))+qAbs((this->loc[path.last()].getY())-(this->loc[path.first()].getY()));
     pathLength+=sqrt(pow(qAbs((this->loc[path.last()].getX())-(this->loc[path.first()].getX())),2)+pow(qAbs((this->loc[path.last()].getY())-(this->loc[path.first()].getY())),2));
     qDebug()<<"pathLength:"<<pathLength;
     return pathLength;
@@ -198,7 +201,7 @@ void ACO::volatilePheromone()
     for(auto i=Pheromone.begin();i!=Pheromone.end();i++){
         for(auto k=i->begin();k!=i->end();k++){
             *k=(*k)*(1.0-PheromoneVolatilization);
-//            qDebug()<<"nowK:"<<*k;
+            //            qDebug()<<"nowK:"<<*k;
         }
     }
 }
@@ -216,7 +219,7 @@ void ACO::refreshPheromone(QVector<QVector<double> > newPheromone)
 void ACO::debugPheromone()
 {
     for(auto i=Pheromone.begin();i!=Pheromone.end();i++){
-            qDebug()<<*i;
+        qDebug()<<*i;
     }
 }
 
