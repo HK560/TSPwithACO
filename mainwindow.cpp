@@ -16,7 +16,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(acoThread,SIGNAL(sendSeries(QLineSeries*)),this,SLOT(showResult(QLineSeries*)));
     connect(acoThread,SIGNAL(minPath(QVector<int>)),this,SLOT(recvMinPath(QVector<int>)));
     connect(acoThread,SIGNAL(minPathLength(double)),this,SLOT(recvMinPathLength(double)));
-
 }
 
 MainWindow::~MainWindow()
@@ -47,7 +46,6 @@ void MainWindow::showResult(QLineSeries* series)
     aY->setTitleText("路径长度");
     chart->addAxis(aX,Qt::AlignBottom);
     chart->addAxis(aY,Qt::AlignLeft);
-    //    QLineSeries* series=aco.getSeries();
     chart->addSeries(series);
     series->attachAxis(aX);//需要先addSeries
     series->attachAxis(aY);
@@ -57,22 +55,31 @@ void MainWindow::showResult(QLineSeries* series)
     chartV->setCentralWidget(chartView);
     chartV->resize(800, 500);
     chartV->show();
-    delete progressBar;
+    delete progressDialog;
     acoThread->terminate();
 }
 
 
 void MainWindow::on_ResultBtn_clicked()
 {
-    progressBar=new QProgressDialog(this);
-    connect(acoThread,SIGNAL(progressValue(int)),this->progressBar,SLOT(setValue(int)));
-    progressBar->setMinimum(0);
-    progressBar->setMaximum(100);
-    progressBar->setLabelText("计算中...");
-    progressBar->setCancelButton(nullptr);
-    progressBar->setFixedSize(200,50);
-    progressBar->setWindowFlag(Qt::ToolTip);
-    progressBar->show();
+    if(ui->antSizeEdit->text().toInt()<=0
+            ||ui->cycleTimeEdit->text().toInt()<=0
+            ||ui->PheromoneImportantValueEdit->text().toInt()<=0
+            ||ui->HeFuntionImportValueEdit->text().toInt()<=0
+            ||ui->PheromoneVolatilizationEdit->text().toDouble()<=0
+            ){
+        QMessageBox::warning(this,"oops遇到些问题","输入的参数非法，请重新输入！");
+        return;
+    }
+    progressDialog=new QProgressDialog(this);
+    connect(acoThread,SIGNAL(progressValue(int)),this->progressDialog,SLOT(setValue(int)));
+    progressDialog->setMinimum(0);
+    progressDialog->setMaximum(100);
+    progressDialog->setLabelText("计算中...");
+    progressDialog->setCancelButton(nullptr);
+    progressDialog->setFixedSize(200,50);
+    progressDialog->setWindowFlag(Qt::ToolTip);
+    progressDialog->show();
     acoThread->getParameter(ui->antSizeEdit->text().toInt(),
                             ui->cycleTimeEdit->text().toInt(),
                             ui->PheromoneImportantValueEdit->text().toInt(),
@@ -80,16 +87,9 @@ void MainWindow::on_ResultBtn_clicked()
                             ui->PheromoneVolatilizationEdit->text().toDouble());
     qtime.start();
     acoThread->start();
-
-
-    //    QVector<int>dds={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29};
-    //    QMessageBox::information(this,"min",QString("min:%1").arg(aco.getPathLength(dds)));
 }
 
-//void MainWindow::recvPrograssValue(int value)
-//{
 
-//}
 
 void MainWindow::recvMinPath(QVector<int> path)
 {

@@ -25,8 +25,8 @@ public:
 
 private slots:
     void on_ResultBtn_clicked();
+
 public slots:
-//    void recvPrograssValue(int value);
     void recvMinPath(QVector<int>path);
     void recvMinPathLength(double pathLength);
     void showResult(QLineSeries* series);
@@ -34,7 +34,7 @@ public slots:
 private:
     Ui::MainWindow *ui;
     AcoThread* acoThread;
-    QProgressDialog* progressBar;
+    QProgressDialog* progressDialog;
     QTime qtime;
 };
 #endif // MAINWINDOW_H

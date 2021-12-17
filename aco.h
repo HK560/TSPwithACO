@@ -24,33 +24,38 @@ class ACO:public QObject
 public:
     ACO();
     ACO(int antSize,int cycletime,int PheromoneImportantValue,int HeFuntionImportValue,double PheromoneVolatilization);
-    void start();
-    QLineSeries* getSeries();
+
+    void start();//启动函数
+
+    QLineSeries* getSeries();//获得数据点信息
     double getGlobalMinPathLength();
     QVector<int> getGlobalMinPath();
-    QVector<CityMap> loc;
     double getPathLength(QVector<int>path);
+
+    QVector<CityMap> loc;//存储城市位置信息
 private:
-
     void init();
-    int locationNum;
 
+    int locationNum;
     int antSize;
     int cycletime;
     int PheromoneImportantValue;
     int HeFuntionImportValue;
     double PheromoneVolatilization;
-    double getProbability(int pos1,int pos2);
-    void volatilePheromone();
+
     QVector<QVector<double>>Pheromone;//信息素
-    void refreshPheromone(QVector<QVector<double>>newPheromone);
-    QVector<QVector<int>>antPath;
+    QVector<QVector<int>>antPath;//蚂蚁路径
     QLineSeries* series=nullptr;
-    void debugPheromone();
     double globalMinPathLength=99999;//DBL_MAX;
-    QVector<int> globalMinPath;
+    QVector<int> globalMinPath;//全局最小路径
+
+    double getProbability(int pos1,int pos2);
+    void volatilePheromone();//信息素挥发
+    void refreshPheromone(QVector<QVector<double>>newPheromone);//刷新信息素
+    void debugPheromone();
+
 signals:
-    void sendPrograssValue(int value);
+    void sendPrograssValue(int value);//发送进度条进度数据
 };
 
 #endif // ACO_H

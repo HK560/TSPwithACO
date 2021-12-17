@@ -24,10 +24,7 @@ ACO::ACO(int antSize, int cycletime, int PheromoneImportantValue, int HeFuntionI
 
 void ACO::start()
 {
-    //    QMessageBox::information(nullptr,"info","start");
     series = new QLineSeries();
-
-
     int time=this->cycletime;
 
     for(int nowTime=0;nowTime<time;nowTime++){
@@ -38,7 +35,6 @@ void ACO::start()
         QVector<int> minPath;
         QVector<QVector<double>>newPheromone;//新信息素
         newPheromone.fill(QVector<double>(30,0),30);
-
         //        debugPheromone();
         for(int i=0;i<antSize;i++){//第i个蚂蚁
             qDebug()<<"-------the"<<i<<"s ant------";
@@ -94,7 +90,6 @@ void ACO::start()
                     if(randProbability<double(*i)){
                         break;
                     }
-
                 }
 
                 //                int lastCity=nowCity;
@@ -130,11 +125,7 @@ void ACO::start()
         }
         qDebug()<<"globalminlength:"<<globalMinPathLength;
         series->append(nowTime,globalMinPathLength);
-
     }
-
-
-
 }
 
 void ACO::init()
@@ -174,7 +165,6 @@ void ACO::init()
 
 double ACO::getPathLength(QVector<int> path)
 {
-    //    qDebug()<<"getpathlength";
     Q_ASSERT(this->locationNum==path.size());
     double pathLength=0;
     for(int k=0;k<path.size()-1;k++){
@@ -182,7 +172,6 @@ double ACO::getPathLength(QVector<int> path)
         pathLength+=sqrt(pow(qAbs((this->loc[path[k]].getX())-(this->loc[path[k+1]].getX())),2)+pow(qAbs((this->loc[path[k]].getY())-(this->loc[path[k+1]].getY())),2));
         //        pathLength+=qAbs((this->loc[path[k]].getX())-(this->loc[path[k+1]].getX()))+qAbs((this->loc[path[k]].getY())-(this->loc[path[k+1]].getY()));
     }
-    //    int end=path.last()
     //    pathLength+=qAbs((this->loc[path.last()].getX())-(this->loc[path.first()].getX()))+qAbs((this->loc[path.last()].getY())-(this->loc[path.first()].getY()));
     pathLength+=sqrt(pow(qAbs((this->loc[path.last()].getX())-(this->loc[path.first()].getX())),2)+pow(qAbs((this->loc[path.last()].getY())-(this->loc[path.first()].getY())),2));
     qDebug()<<"pathLength:"<<pathLength;
@@ -201,7 +190,6 @@ void ACO::volatilePheromone()
     for(auto i=Pheromone.begin();i!=Pheromone.end();i++){
         for(auto k=i->begin();k!=i->end();k++){
             *k=(*k)*(1.0-PheromoneVolatilization);
-            //            qDebug()<<"nowK:"<<*k;
         }
     }
 }

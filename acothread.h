@@ -12,7 +12,7 @@ class AcoThread:public QThread
 public:
     AcoThread(QObject *parent=0);
 protected:
-    void run();
+    void run();//线程执行函数
 private:
     bool ready=false;
     int locationNum;
@@ -23,9 +23,10 @@ private:
     double PheromoneVolatilization;
 
     ACO* aco;
+
 signals:
-    void progressValue(int value);
-    void minPath(QVector<int>path);
+    void progressValue(int value);//进度条进度信号
+    void minPath(QVector<int>path);//最小路径信号
     void minPathLength(double pathLength);
     void sendSeries(QLineSeries* series);
 public slots:
